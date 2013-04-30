@@ -1,0 +1,7 @@
+*** Settings ***
+library 	Remote 	http://localhost:8270
+
+*** Test Cases ***
+proc with one argument returns it argument
+    ${val}=    func1    Hello, world!
+    Should Be Equal 	${val} 	Hello, world!
