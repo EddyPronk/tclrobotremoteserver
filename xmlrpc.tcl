@@ -57,7 +57,6 @@
 # it will return the (key, datum) pair if a match is found.
 
 # TODO:
-# -currently server functions can't return dictionaries
 # -add more error handling
 # -Check for [{}] in unmarshalling
 # -Empty dictionaries
@@ -546,6 +545,16 @@ proc xmlrpc::marshall {param {ntabs 0} {distance 1}} {
 		append	str "$strtabs\t\t</data>\n"
 		append	str "$strtabs\t</array>\n"
 		append	str "$strtabs</value>\n"
+		return $str
+	} elseif {$type == "dict"} {
+		set	str "$strtabs<struct>\n"
+		dict for {k v} $val {
+			append 	str "$strtabs\t<member>\n"
+			append	str "$strtabs\t\t<name>$k</name>\n"
+			append 	str [marshall $v [expr $ntabs + 2] [expr $distance + 1]]
+			append	str "\n$strtabs\t</member>\n"
+		}
+		append	str "$strtabs</struct>"
 		return $str
 	} else {
 		return [errReturn "Unknown type: $type"]
