@@ -150,10 +150,18 @@ proc xmlrpc::doRequest {sock} {
 	if {$param != "</params>"} {
 		return [errReturn "Invalid End Params"]
 	}
-	if {[catch {set result [eval ::$mname $args]}]} {
-		set response [buildFault 100 "eval() failed"]
+	if {[llength $args] == 0} {
+		if {[catch {set result [eval ::$mname]}]} {
+			set response [buildFault 100 "evaluation failed"]
+		} else {
+			set response [buildResponse $result]
+		}
 	} else {
-		set response [buildResponse $result]
+		if {[catch {set result [eval ::$mname $args]}]} {
+			set response [buildFault 100 "evaluation failed"]
+		} else {
+			set response [buildResponse $result]
+		}
 	}
 	debug "in doRequest: response:\n$response"
 	puts -nonewline $sock $response
