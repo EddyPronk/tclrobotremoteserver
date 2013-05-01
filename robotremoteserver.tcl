@@ -22,9 +22,9 @@ proc get_keyword_names {} {
 		set val [string range $procname 7 end]
 		lappend keywords [list string $val]
 	}
-	set result [dict create]
-	dict set result "array" $keywords
-	return $result
+	set envelope [dict create]
+	dict set envelope "array" $keywords
+	return $envelope
 }
 
 proc get_keyword_documentation {a} {
@@ -36,23 +36,23 @@ proc get_keyword_arguments {func} {
 	foreach procname [info args api::$func] {
 		lappend keywords [list string $procname]
 	}
-	set result [dict create]
-	dict set result "array" $keywords
-	return $result
+	set envelope [dict create]
+	dict set envelope "array" $keywords
+	return $envelope
 }
 
 proc run_keyword {name args} {
-	set err3 [dict create]
-	dict set err3 status {string "PASS"}
+	set result [dict create]
+	dict set result status {string "PASS"}
 	puts $args
 	if {[catch {set return_value [eval ::api::$name {*}$args]} err]} {
 		puts $err
 	}
 	set return_tup [list string $return_value]
-	dict set err3 return $return_tup
-	set result [dict create]
-	dict set result dict $err3
-	return $result
+	dict set result return $return_tup
+	set envelope [dict create]
+	dict set envelope dict $result
+	return $envelope
 }
 
 vwait forever
