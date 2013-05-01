@@ -1,3 +1,17 @@
+#  Copyright 2013 Eddy Pronk
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 source xmlrpc.tcl
 
 xmlrpc::serve 8270
@@ -30,7 +44,10 @@ proc get_keyword_arguments {func} {
 proc run_keyword {name args} {
 	set err3 [dict create]
 	dict set err3 status {string "PASS"}
-	set return_value [::api::$name $args]
+	puts $args
+	if {[catch {set return_value [eval ::api::$name {*}$args]} err]} {
+		puts $err
+	}
 	set return_tup [list string $return_value]
 	dict set err3 return $return_tup
 	set result [dict create]

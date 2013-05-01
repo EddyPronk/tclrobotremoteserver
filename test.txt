@@ -3,5 +3,5 @@ library 	Remote 	http://localhost:8270
 
 *** Test Cases ***
 proc with one argument returns it argument
-    ${val}=    func1    Hello, world!
+    ${val}=    func1    Hello, world!    dummy
     Should Be Equal 	${val} 	Hello, world!
